@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 110429953}
   - component: {fileID: 110429952}
   - component: {fileID: 110429951}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,6 +158,10 @@ MonoBehaviour:
   deathEffect: {fileID: 0}
   bullet: {fileID: 2801378216883606016, guid: 1271e7de2c2b26440b7c841f2b6cc698, type: 3}
   bulletPos: {fileID: 922546773}
+  moveSpeed: 1
+  moveRadius: 5
+  firePointOffset: 1
+  bulletSpawnRadius: 3
 --- !u!61 &110429952
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -951,7 +955,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.0047, y: -4.521, z: 0}
-  m_LocalScale: {x: 18.950474, y: 1, z: 1}
+  m_LocalScale: {x: 68.2217, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -965,6 +969,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2131449725}
+  - component: {fileID: 2131449727}
   - component: {fileID: 2131449724}
   - component: {fileID: 2131449723}
   - component: {fileID: 2131449726}
@@ -1093,6 +1098,21 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &2131449727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2131449722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eef5dea6b685eb4696ba8e550d09068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 342068343}
+  offset: {x: 0, y: 2, z: -10}
+  smoothSpeed: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
