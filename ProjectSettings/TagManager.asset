@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Wall
+  - PlayerBullet
   layers:
   - Default
   - TransparentFX
@@ -15,10 +17,10 @@ TagManager:
   - PlayerBullet
   - Enemy
   - EnemyBullet
-  - 
-  - 
-  - 
-  - 
+  - Platfrom
+  - EnemyShield
+  - Drops
+  - CameraBoundary
   - 
   - 
   - 

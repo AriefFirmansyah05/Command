@@ -37,6 +37,18 @@ public class EnemyBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("Bullet hit something.");
+        
+        if (other.CompareTag("Wall"))
+        {
+            Destroy(gameObject); // Destroy the enemy bullet when it collides with a wall
+        }
+        else if (other.CompareTag("PlayerBullet"))
+        {
+            Destroy(other.gameObject); // Destroy the player's bullet
+            Destroy(gameObject); // Destroy the enemy bullet when colliding with a player's bullet
+        }
+
         if (!hasHitPlayer && other.gameObject.CompareTag("Player"))
         {
             PlayerMovement playerMovement = other.gameObject.GetComponent<PlayerMovement>();
