@@ -18,6 +18,11 @@ public class EnemyMissile : MonoBehaviour
     private Vector3 initialPosition;
     private Vector3 attackPosition;
 
+    public GameObject scoreDisplayPrefab;
+    private GameObject scoreDisplayObject;
+    private float displayDuration = 2.0f; // Adjust this to the desired duration in seconds
+    private float timer = 0f;
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -38,6 +43,22 @@ public class EnemyMissile : MonoBehaviour
                 FireHomingMissile(isMovingRight); // Pass the direction to FireHomingMissile
                 nextFireTime = Time.time + 1 / fireRate;
             }
+        }
+
+        if (scoreDisplayObject != null)
+        {
+            if (timer >= displayDuration)
+            {
+                // Destroy the score display object
+                Destroy(scoreDisplayObject);
+                scoreDisplayObject = null; // Set it to null to avoid issues
+
+                // Reset the timer
+                timer = 0f;
+            }
+
+            // Increment the timer
+            timer += Time.deltaTime;
         }
 
         Patrol();
@@ -95,6 +116,10 @@ public class EnemyMissile : MonoBehaviour
 
     private void Die()
     {
+        ScoreManager.instance.AddScore(10);
+
+        GameObject scoreDisplayObject = Instantiate(scoreDisplayPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+        
         Destroy(gameObject);
     }
 }

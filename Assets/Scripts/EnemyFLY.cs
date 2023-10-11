@@ -23,6 +23,11 @@ public class EnemyFLY : MonoBehaviour
     private bool isMovingRight = true;
     private Vector2 initialPosition;
 
+    public GameObject scoreDisplayPrefab;
+    private GameObject scoreDisplayObject;
+    private float displayDuration = 2.0f; // Adjust this to the desired duration in seconds
+    private float timer = 0f;
+
     void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
@@ -52,6 +57,22 @@ public class EnemyFLY : MonoBehaviour
         else
         {
             Patrol();
+        }
+
+        if (scoreDisplayObject != null)
+        {
+            if (timer >= displayDuration)
+            {
+                // Destroy the score display object
+                Destroy(scoreDisplayObject);
+                scoreDisplayObject = null; // Set it to null to avoid issues
+
+                // Reset the timer
+                timer = 0f;
+            }
+
+            // Increment the timer
+            timer += Time.deltaTime;
         }
     }
 
@@ -90,7 +111,10 @@ public class EnemyFLY : MonoBehaviour
     // Die method to handle enemy death
     void Die()
     {
-        
+        ScoreManager.instance.AddScore(10);
+
+        GameObject scoreDisplayObject = Instantiate(scoreDisplayPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+
         Destroy(gameObject);
     }
 

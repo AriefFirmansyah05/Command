@@ -14,65 +14,66 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private LayerMask m_CameraBoundaryLayer;
 
-       
+    // Reference to the Lose UI prefab
+    public GameObject loseUIPrefab;
+    private GameObject loseUIObject;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
-{
-    // Check for collisions with the CameraBoundary layer
-    if (Physics2D.OverlapCircle(transform.position, 0.1f, m_CameraBoundaryLayer))
     {
-        // Player is colliding with the camera boundary; prevent movement
-        horizontalMove = 0f;
-    }
-    else
-    {
-        // Player is not colliding with the camera boundary
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-        
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        // Check for collisions with the CameraBoundary layer
+        if (Physics2D.OverlapCircle(transform.position, 0.1f, m_CameraBoundaryLayer))
+        {
+            // Player is colliding with the camera boundary; prevent movement
+            horizontalMove = 0f;
+        }
+        else
+        {
+            // Player is not colliding with the camera boundary
+            horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+
+            animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            jump = true;
+            animator.SetBool("IsJumping", true);
+        }
+
+        if (Input.GetButtonDown("Crouch"))
+        {
+            crouch = true;
+        }
+        else if (Input.GetButtonUp("Crouch"))
+        {
+            crouch = false;
+        }
     }
 
-    if (Input.GetButtonDown("Jump"))
-    {
-        jump = true;
-        animator.SetBool("IsJumping", true);
-    }
-
-    if (Input.GetButtonDown("Crouch"))
-    {
-        crouch = true;
-    }
-    else if (Input.GetButtonUp("Crouch"))
-    {
-        crouch = false;
-    }
-}
-
-    public void OnLanding ()
+    public void OnLanding()
     {
         animator.SetBool("IsJumping", false);
     }
 
-    public void OnCrouching (bool IsCrouching)
+    public void OnCrouching(bool IsCrouching)
     {
         animator.SetBool("IsCrouching", IsCrouching);
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
         controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
         jump = false;
-
-
     }
 
-     public void TakeDamage (int damage)
+    public void TakeDamage(int damage)
     {
         health -= damage;
 
@@ -82,15 +83,20 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Die ()
+    void Die()
     {
         Destroy(gameObject);
+
+        // Show the Lose UI when the player dies
+        if (loseUIPrefab != null)
+         {
+         loseUIObject = Instantiate(loseUIPrefab);
+         }
     }
 
     public bool IsAlive()
-{
-    // Check if the player's health is greater than zero
-    return health > 0;
+    {
+        // Check if the player's health is greater than zero
+        return health > 0;
+    }
 }
-}
-

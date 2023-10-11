@@ -17,7 +17,7 @@ public class EnemyMinigun : MonoBehaviour
     public GameObject scoreDisplayPrefab;
     private GameObject scoreDisplayObject;
 
-     private float displayDuration = 2.0f; // Adjust this to the desired duration in seconds
+    private float displayDuration = 2.0f; // Adjust this to the desired duration in seconds
     private float timer = 0f;
 
     private void Start()
@@ -44,50 +44,59 @@ public class EnemyMinigun : MonoBehaviour
             }
         }
 
-        if (scoreDisplayObject != null && timer >= displayDuration)
-{
-    // Destroy the score display object
-    Destroy(scoreDisplayObject);
+        if (scoreDisplayObject != null)
+        {
+            if (timer >= displayDuration)
+            {
+                // Destroy the score display object
+                Destroy(scoreDisplayObject);
+                scoreDisplayObject = null; // Set it to null to avoid issues
 
-    // Reset the timer
-    timer = 0f;
-}
+                // Reset the timer
+                timer = 0f;
+            }
 
+            // Increment the timer
+            timer += Time.deltaTime;
+        }
 
-        // Increment the timer
-        timer += Time.deltaTime;
+        
     }
 
     private void FireBullet()
-    {
-        if (bulletPrefab != null && firePoint != null)
-        {
-            // Instantiate and fire the bullet
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-            BurstMode enemyBullet = bullet.GetComponent<BurstMode>();
-            if (enemyBullet != null)
-            {
-                // Track the number of shots fired in the enemy bullet script
-                enemyBullet.IncrementShotsFired();
-            }
-        }
-    }
-
-    // Method to handle taking damage
-    public void TakeDamage(int damage)
 {
-    currentHealth -= damage;
-    Debug.Log("Enemy's Current Health: " + currentHealth); // Add this line
-
-    if (currentHealth <= 0)
+    if (bulletPrefab != null && firePoint != null)
     {
-        Die();
+        // Calculate the direction to the player
+        Vector3 directionToPlayer = player.position - firePoint.position;
+
+        // Create a bullet facing the direction of the player
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(directionToPlayer));
+        BurstMode enemyBullet = bullet.GetComponent<BurstMode>();
+
+        if (enemyBullet != null)
+        {
+            // Track the number of shots fired in the enemy bullet script
+            enemyBullet.IncrementShotsFired();
+        }
     }
 }
 
 
+    // Method to handle taking damage
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        Debug.Log("Enemy's Current Health: " + currentHealth); // Add this line
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
     // Method to handle the enemy's death
-  private void Die()
+    private void Die()
 {
     // Update the player's score when the enemy dies
     ScoreManager.instance.AddScore(10);
@@ -95,11 +104,8 @@ public class EnemyMinigun : MonoBehaviour
     // Instantiate the ScoreDisplayAboveEnemy prefab
     GameObject scoreDisplayObject = Instantiate(scoreDisplayPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
 
-    // Perform any other death-related logic here
+    Destroy(gameObject); // Destroy the enemy GameObject
 
-    // Destroy the enemy GameObject after all operations are complete
-    Destroy(gameObject);
 }
-
 
 }

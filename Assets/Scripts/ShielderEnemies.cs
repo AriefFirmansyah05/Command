@@ -17,6 +17,12 @@ public class ShielderEnemy : MonoBehaviour
     private float bulletSpawnRate; // Current shooting rate
     private float timeSinceLastSpawn = 0f;
 
+    public GameObject scoreDisplayPrefab;
+    private GameObject scoreDisplayObject;
+
+    private float displayDuration = 2.0f; // Adjust this to the desired duration in seconds
+    private float timer = 0f;
+
     private void Start()
     {
         currentShieldHealth = maxShieldHealth;
@@ -55,6 +61,19 @@ public class ShielderEnemy : MonoBehaviour
                 timeSinceLastSpawn = 0f;
             }
         }
+
+    if (scoreDisplayObject != null && timer >= displayDuration)
+{
+    // Destroy the score display object
+    Destroy(scoreDisplayObject);
+
+    // Reset the timer
+    timer = 0f;
+}
+
+
+        // Increment the timer
+        timer += Time.deltaTime;
 }
 
     private void SpawnBullet()
@@ -118,6 +137,12 @@ public class ShielderEnemy : MonoBehaviour
     private void Die()
     {
         Destroy(gameObject); // For example, destroy the enemy when it runs out of health
+
+        ScoreManager.instance.AddScore(10);
+
+        // Instantiate the ScoreDisplayAboveEnemy prefab
+        GameObject scoreDisplayObject = Instantiate(scoreDisplayPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+
     }
 
     public bool IsShieldActive()

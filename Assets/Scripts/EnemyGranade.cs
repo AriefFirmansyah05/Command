@@ -17,6 +17,11 @@ public class EnemyGrenade : MonoBehaviour
     public float detectionRange = 10f;
     private bool playerDetected = false;
 
+    public GameObject scoreDisplayPrefab;
+    private GameObject scoreDisplayObject;
+    private float displayDuration = 2.0f; // Adjust this to the desired duration in seconds
+    private float timer = 0f;
+
     private void Start()
     {
         currentHealth = maxHealth;
@@ -57,6 +62,23 @@ public class EnemyGrenade : MonoBehaviour
         {
             playerDetected = false;
         }
+
+        if (scoreDisplayObject != null)
+        {
+            if (timer >= displayDuration)
+            {
+                // Destroy the score display object
+                Destroy(scoreDisplayObject);
+                scoreDisplayObject = null; // Set it to null to avoid issues
+
+                // Reset the timer
+                timer = 0f;
+            }
+
+            // Increment the timer
+            timer += Time.deltaTime;
+        }
+
     }
 
     public void TakeDamage(int damage)
@@ -71,6 +93,11 @@ public class EnemyGrenade : MonoBehaviour
 
     void Die()
     {
+        ScoreManager.instance.AddScore(10);
+
+    // Instantiate the ScoreDisplayAboveEnemy prefab
+        GameObject scoreDisplayObject = Instantiate(scoreDisplayPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+
         Destroy(gameObject);
     }
 
